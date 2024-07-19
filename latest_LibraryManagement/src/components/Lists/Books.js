@@ -14,6 +14,7 @@ import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
 import { Tooltip } from "@mui/material";
 import { ToastContainer, toast } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
+import { Col, Row } from "react-bootstrap";
 
 export default function Books() {
   const navigate = useNavigate();
@@ -302,12 +303,8 @@ const validateQuantity = (quantity) => {
     <div style={{ width: "80%", margin: "20px auto" }}>
       <h2 style={{ fontWeight: "bold" }}>Books List</h2>
       <br/>
-      <div>
-        <Link to="/AddBooks">
-          <Button variant="primary">Add Book</Button>
-        </Link>
-      </div>
-      <br/>
+      <Row>
+      <Col>
       <Form.Group className="mb-3">
         <Form.Select enabled value={currentData1.cityId} onChange={handleInputChange1} name='cityId'>
         <option value="">Select City</option>
@@ -317,7 +314,9 @@ const validateQuantity = (quantity) => {
             ))}
         </Form.Select>
     </Form.Group>
-    <Form.Group className="mb-3">
+      </Col>
+      <Col>
+      <Form.Group className="mb-3">
         <Form.Select enabled value={currentData1.libraryId} onChange={handleInputChange1} name='libraryId'>
         <option value="">Select Library</option>
         {viewLibraryData.map((item) => (
@@ -326,6 +325,17 @@ const validateQuantity = (quantity) => {
             ))}
         </Form.Select>
       </Form.Group>
+      </Col>
+       <Col>
+       <div style={{float:"right"}}>
+        <Link to="/AddBooks">
+          <Button variant="primary">Add Book</Button>
+        </Link>
+      </div>
+       </Col>     
+
+      </Row>
+      
       <Table stripped bordered hover variant="light">
           {books.length > 0 ? ( 
             <>

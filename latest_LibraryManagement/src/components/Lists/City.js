@@ -7,6 +7,7 @@ import { IconButton, Tooltip } from '@mui/material';
 import DeleteIcon from "@mui/icons-material/Delete";
 import { ToastContainer, toast } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
+import { Col, Row } from 'react-bootstrap';
 
 
 export default function City() {
@@ -36,12 +37,18 @@ export default function City() {
   return (
     <div  style={{ width: '80%', margin: '20px auto' }}>
         <h2 style={{ fontWeight: 'bold' }}>City List</h2>
-        <br/>
-        <div>
+        
+       
+        <Row>
+        <Col>
+        <div style={{float:"right"}}>
             <Link to="/AddCity">
                 <Button variant="primary">Add City</Button>
             </Link>
         </div>
+       </Col>     
+
+      </Row>
         <br/>
         <Table stripped bordered hover variant="light">
             <thead style={{backgroundColor:"#1976d2",height:"40px", verticalAlign: "middle"}}>

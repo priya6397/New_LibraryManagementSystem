@@ -12,6 +12,7 @@ import EditNoteIcon from "@mui/icons-material/EditNote";
 import { Tooltip } from "@mui/material";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from 'react-toastify';
+import { Col, Row } from "react-bootstrap";
 
 
 export default function Library() {
@@ -196,12 +197,17 @@ export default function Library() {
   return (
     <div style={{ width: "80%", margin: "20px auto" }}>
       <h2 style={{ fontWeight: "bold" }}>Library List</h2>
-      <br/>
-      <div>
+
+      <Row>
+        <Col>
+        <div style={{float:"right"}}>
         <Link to="/AddLibrary">
           <Button variant="primary">Add Library</Button>
         </Link>
-      </div>
+        </div>
+       </Col>     
+
+      </Row>
       <br/>
       <Table stripped bordered hover variant="light">
         <thead style={{ backgroundColor: "#1976d2", height: "40px", verticalAlign: "middle", textAlign: "center" }}>

@@ -84,11 +84,12 @@ const AddLibrary = () => {
       const validateAddress = (address) => {
         if (!address) {
           return 'Address is required';
-        } else if (!/^[a-zA-Z0-9\\s]*$/.test(address)) {
-          return 'Address should only contain alphanumeric characters';
+        } else if (!/^[a-zA-Z0-9\s]*$/.test(address)) {
+          return 'Address should only contain alphanumeric characters and spaces';
         }
         return '';
       };
+      
 
       const validateName = (name) => {
         if (!name) {
