@@ -135,7 +135,6 @@ const AddCity = () => {
                 </div>
             </div>
         </div>
-    <ToastContainer />
     </div>
   )
 }
