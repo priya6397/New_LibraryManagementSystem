@@ -17,6 +17,7 @@ public class UserResponse {
     private String address;
     private String phoneNo;
     private String email;
-    private String confirmationCode;
+//    private String confirmationCode;
+    private String aadharNo;
     private LocalDate createdAt;
 }

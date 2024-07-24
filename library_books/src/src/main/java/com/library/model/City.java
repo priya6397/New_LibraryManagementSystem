@@ -24,4 +24,5 @@ public class City {
     private LocalDate createdAt;
     private LocalDate updatedAt;
     private Long updatedBy;
+    private boolean isActive = true;
 }

@@ -7,6 +7,7 @@ import com.library.model.Library;
 import com.library.payload.request.BookRequest;
 import com.library.payload.response.BookResponse;
 import com.library.repository.BookRepository;
+import com.library.repository.IssuedBookRepository;
 import com.library.repository.LibraryRepository;
 import com.library.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +19,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
 public class BookServiceImpl implements BookService {
 
     @Autowired
     private BookRepository bookRepository;
-
     @Autowired
     private LibraryRepository libraryRepository;
+    @Autowired
+    private IssuedBookRepository issuedBookRepository;
     @Override
+    @Transactional
     public BookResponse createBook(BookRequest bookRequest) {
         Book book = new Book();
         book.setTitle(bookRequest.getTitle());
@@ -42,26 +44,29 @@ public class BookServiceImpl implements BookService {
         book.setLibrary(library);
         book.setCreatedAt(LocalDate.now());
 
-        if (bookRepository.existsByTitleAndAuthorName(book.getTitle(), book.getAuthorName())) {
-            throw new DuplicateEntryException("Book with the same title and author already exists");
+        if (bookRepository.existsByTitle(book.getTitle())) {
+            throw new DuplicateEntryException("Book with the same title already exists");
         }
         book = bookRepository.save(book);
         return mapToBookResponse(book);
     }
 
     @Override
+    @Transactional
     public BookResponse getBookById(Long id) {
         Book book = bookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
         return mapToBookResponse(book);
     }
 
     @Override
+    @Transactional
     public List<BookResponse> getAllBooks() {
-        List<Book> books = bookRepository.findAll();
+        List<Book> books = bookRepository.findAllByOrderByTitleAsc();
         return books.stream().map(this::mapToBookResponse).collect(Collectors.toList());
     }
 
     @Override
+    @Transactional
     public BookResponse updateBook(Long id, BookRequest bookRequest) {
         Book book = bookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
         book.setTitle(bookRequest.getTitle());
@@ -81,12 +86,16 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional
     public void deleteBook(Long id) {
         Book book = bookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Book not found"));
-        bookRepository.delete(book);
+        book.setActive(false);
+        book.setUpdatedAt(LocalDate.now());
+        bookRepository.save(book);
     }
 
-    private BookResponse mapToBookResponse(Book book) {
+    @Transactional
+    public BookResponse mapToBookResponse(Book book) {
         BookResponse bookResponse = new BookResponse();
         bookResponse.setId(book.getId());
         bookResponse.setTitle(book.getTitle());
@@ -100,5 +109,21 @@ public class BookServiceImpl implements BookService {
         bookResponse.setLibrary(book.getLibrary());
         bookResponse.setCreatedAt(book.getCreatedAt());
         return bookResponse;
+    }
+
+    @Override
+    @Transactional
+    public List<BookResponse> getAllBooks(Long cityId, Long libraryId) {
+        List<Book> books;
+        if (cityId != null && libraryId != null) {
+            books = bookRepository.findByLibraryCityIdAndLibraryIdAndIsActive(cityId, libraryId, true);
+        } else if (cityId != null) {
+            books = bookRepository.findByLibraryCityIdAndIsActive(cityId, true);
+        } else if (libraryId != null) {
+            books = bookRepository.findByLibraryIdAndIsActive(libraryId, true);
+        } else {
+            books = bookRepository.findByIsActive(true);
+        }
+        return books.stream().map(this::mapToBookResponse).collect(Collectors.toList());
     }
 }

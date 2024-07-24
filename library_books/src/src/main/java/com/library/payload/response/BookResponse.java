@@ -23,6 +23,7 @@ public class BookResponse {
     private String bookType;
     private BigDecimal price;
     private int quantity;
+    private String aadharNo;
     private Library library;
     private LocalDate createdAt;
 }

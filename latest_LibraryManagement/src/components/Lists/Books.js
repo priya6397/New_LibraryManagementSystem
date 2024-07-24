@@ -12,12 +12,14 @@ import Form from "react-bootstrap/Form";
 import LibraryServices from "../Service/LibraryService";
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
 import { Tooltip } from "@mui/material";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
+import { Col, Row } from "react-bootstrap";
 
 export default function Books() {
   const navigate = useNavigate();
   const initialBookData = {
+    bookId:"",
     title: "",
     authorName: "",
     publisherName: "",
@@ -58,6 +60,7 @@ export default function Books() {
     
   
   const [currentData1, setCurrentData1] = useState(newBookData);
+
   useEffect(() => {
     getBooksByFilter();
   }, [currentData1.cityId, currentData1.libraryId]);
@@ -77,7 +80,20 @@ export default function Books() {
     const getBooks = async (id) => {
       handleShow();
       const result = await BookServices.getBooks(id);
-      setCurrentData(result.data);
+      setCurrentData({
+        bookId:result.data.id,
+        title: result.data.title,
+        authorName: result.data.authorName,
+        publisherName: result.data.publisherName,
+        publisherNo: result.data.publisherNo,
+        publisherEmail: result.data.publisherEmail,
+        bookType: result.data.bookType,
+        libraryId: result.data.library.id,
+        cityId: result.data.library.city.id,
+        price:result.data.price,
+        quantity:result.data.quantity,
+      });
+      getLibraryByCityId(result.data.library.city.id);
     };
 
     const getCities = () =>{
@@ -91,13 +107,14 @@ export default function Books() {
       getCities();
   }, []);
   
-  const getLibraryByCityId = () =>{
-      LibraryServices.getLibraryByCityId(currentData1?.cityId).then((response) =>{
+  const getLibraryByCityId = (cityId) =>{
+      LibraryServices.getLibraryByCityId(cityId).then((response) =>{
           setViewLibraryData(response.data)
       }).catch((error) => {
           console.log("error", error);
       })
   }
+
   useEffect(()=>{
     if(currentData1.cityId !== ""){
       getLibraryByCityId();
@@ -123,13 +140,11 @@ export default function Books() {
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    if (name === "libraryId") {
-      const selectedLibrary = viewLibraryData.find(
-        (library) => library.id === parseInt(value)
-      );
-      setCurrentData({ ...currentData, library: selectedLibrary });
-    } else {
-      setCurrentData({ ...currentData, [name]: value });
+    setCurrentData({ ...currentData, [name]: value });
+
+    if (name === 'cityId') {
+      setCurrentData({ ...currentData, cityId: value, libraryId: "" });
+      getLibraryByCityId(value);
     }
 
     switch (name) {
@@ -165,7 +180,7 @@ export default function Books() {
         break;
       default:
         break;
-  };
+    }
   };
 
   const validatePublisherEmail = (publisherEmail) => {
@@ -277,8 +292,8 @@ const validateQuantity = (quantity) => {
     setErrors(newErrors);
     if (Object.values(newErrors).every(error => error === '')) {
         console.log('Form submitted successfully:', currentData);
-        const updatedData = { ...currentData, libraryId: currentData.library?.id }; //... spread operator stores data
-        BookServices.updateBook(currentData.id, updatedData)
+        
+        BookServices.updateBook(currentData.bookId, currentData)
           .then((response) => {
             if (response.status === 200) {
               toast.success("Book updated successfully!");
@@ -298,16 +313,15 @@ const validateQuantity = (quantity) => {
 
  
 
+    console.log("editData",currentData);
+    console.log("viewLibraryData",viewLibraryData);
+    console.log("viewCityData",viewCityData);
   return (
     <div style={{ width: "80%", margin: "20px auto" }}>
       <h2 style={{ fontWeight: "bold" }}>Books List</h2>
       <br/>
-      <div>
-        <Link to="/AddBooks">
-          <Button variant="primary">Add Book</Button>
-        </Link>
-      </div>
-      <br/>
+      <Row>
+      <Col>
       <Form.Group className="mb-3">
         <Form.Select enabled value={currentData1.cityId} onChange={handleInputChange1} name='cityId'>
         <option value="">Select City</option>
@@ -317,7 +331,9 @@ const validateQuantity = (quantity) => {
             ))}
         </Form.Select>
     </Form.Group>
-    <Form.Group className="mb-3">
+      </Col>
+      <Col>
+      <Form.Group className="mb-3">
         <Form.Select enabled value={currentData1.libraryId} onChange={handleInputChange1} name='libraryId'>
         <option value="">Select Library</option>
         {viewLibraryData.map((item) => (
@@ -326,6 +342,17 @@ const validateQuantity = (quantity) => {
             ))}
         </Form.Select>
       </Form.Group>
+      </Col>
+       <Col>
+       <div style={{float:"right"}}>
+        <Link to="/AddBooks">
+          <Button variant="primary">Add Book</Button>
+        </Link>
+      </div>
+       </Col>     
+
+      </Row>
+      
       <Table stripped bordered hover variant="light">
           {books.length > 0 ? ( 
             <>
@@ -433,20 +460,19 @@ const validateQuantity = (quantity) => {
         </Modal.Header>
         <Modal.Body>
         <Form.Group className="mb-3">
-            <Form.Select enabled value={currentData?.city?.id} onChange={handleInputChange} name='cityId'
+            <Form.Select enabled value={currentData?.cityId} onChange={handleInputChange} name='cityId'
             title="Select City">
-            <option>Select City</option>
+            <option value={``}>Select City</option>
             {viewCityData.map((item) => (
                 <option value={item.id}>{item.name}</option>
-                
                 ))}
             </Form.Select>
             <span style={{display: 'flex', color: 'red'}}>{errors.cityId}</span>
         </Form.Group>
         <Form.Group className="mb-3">
-            <Form.Select enabled value={currentData?.library?.id} onChange={handleInputChange} name='libraryId'
+            <Form.Select enabled value={currentData?.libraryId} onChange={handleInputChange} name='libraryId'
             title="Select Library">
-            <option>Select Library</option>
+            <option value={``}>Select Library</option>
             {viewLibraryData.map((item) => (
                 <option value={item.id}>{item.name}</option>
                 

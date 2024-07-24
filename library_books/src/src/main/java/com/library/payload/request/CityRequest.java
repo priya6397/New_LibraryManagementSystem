@@ -1,5 +1,6 @@
 package com.library.payload.request;
 
+import com.library.Utils.StringCharacter;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -16,5 +17,6 @@ public class CityRequest {
 
    @NotEmpty(message = "City Name is required")
    @Size(max = 25, message = "City must be at most 25 characters")
+   @StringCharacter
    private String cityName;
 }

@@ -12,8 +12,8 @@ public interface UserService {
     UserResponse getUserById(Long id);
     List<UserResponse> getAllUsers();
     Page<User> getAllUsers(int page, int size);
+    Page<User> searchUsersByFullName(String fullName, int page, int size);
     UserResponse updateUser(Long id, UserRequest userRequest);
     void deleteUser(Long id);
-
     void checkDeleteUserIssuedBooks(Long id);
 }

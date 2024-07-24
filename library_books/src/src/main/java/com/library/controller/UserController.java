@@ -30,7 +30,7 @@ public class UserController {
     @Autowired
     private IssueBookImpl issuedBookService;
 
-    @PostMapping
+    @PostMapping("/save")
     public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserRequest userRequest) {
         UserResponse userResponse = userService.createUser(userRequest);
         return ResponseEntity.ok(userResponse);
@@ -42,7 +42,7 @@ public class UserController {
         return ResponseEntity.ok(userResponse);
     }
 
-    @GetMapping
+    @GetMapping("getAll")
     public ResponseEntity<List<UserResponse>> getAllUsers() {
         List<UserResponse> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
@@ -56,7 +56,7 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        userService.checkDeleteUserIssuedBooks(id);
+//        userService.checkDeleteUserIssuedBooks(id);
         userService.deleteUser(id);
 
         return ResponseEntity.noContent().build();
@@ -70,8 +70,14 @@ public class UserController {
 
     @GetMapping("/pagination")
     public PaginatedUserResponse getAllUsers(@RequestParam(defaultValue = "0") int page,
-                                             @RequestParam(defaultValue = "10") int size) {
-        Page<User> userPage = userService.getAllUsers(page, size);
+                                             @RequestParam(defaultValue = "10") int size,
+                                             @RequestParam(required = false) String fullName) {
+        Page<User> userPage;
+        if (fullName != null && !fullName.isEmpty()) {
+            userPage = userService.searchUsersByFullName(fullName, page, size);
+        } else {
+            userPage = userService.getAllUsers(page, size);
+        }
 
         List<UserResponse> users = userPage.stream().map(user -> new UserResponse(
                 user.getId(),
@@ -79,7 +85,8 @@ public class UserController {
                 user.getAddress(),
                 user.getPhoneNo(),
                 user.getEmail(),
-                user.getConfirmationCode(),
+//                user.getConfirmationCode(),
+                user.getAadharNo(),
                 user.getCreatedAt()
         )).collect(Collectors.toList());
 

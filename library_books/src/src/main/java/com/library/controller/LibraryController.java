@@ -20,7 +20,7 @@ public class LibraryController {
     @Autowired
     private LibraryService libraryService;
 
-    @PostMapping
+    @PostMapping("/save")
     public ResponseEntity<LibraryResponse> createLibrary(@Valid @RequestBody LibraryRequest libraryRequest) {
         LibraryResponse libraryResponse = libraryService.createLibrary(libraryRequest);
         return ResponseEntity.ok(libraryResponse);
@@ -32,7 +32,7 @@ public class LibraryController {
         return ResponseEntity.ok(libraryResponse);
     }
 
-    @GetMapping
+    @GetMapping("/getAll")
     public ResponseEntity<List<LibraryResponse>> getAllLibraries() {
         List<LibraryResponse> libraries = libraryService.getAllLibraries();
         return ResponseEntity.ok(libraries);

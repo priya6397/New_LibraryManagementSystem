@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 public interface IssueBookService {
 
-    Book issueBook(Long bookId, Long userId, String confirmationCode, LocalDate expiryDate);
+    Book issueBook(Long bookId, Long userId, String aadharNo, LocalDate expiryDate);
     Book returnBook(Long issuedBookId);
     int getBookQuantity(Long bookId);
 }

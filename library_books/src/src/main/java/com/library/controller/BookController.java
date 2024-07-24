@@ -26,7 +26,7 @@ public class BookController {
     @Autowired
     private IssueBookService issueBookService;
 
-    @PostMapping
+    @PostMapping("/save")
     public ResponseEntity<BookResponse> createBook(@Valid @RequestBody BookRequest bookRequest) {
         BookResponse bookResponse = bookService.createBook(bookRequest);
         return ResponseEntity.ok(bookResponse);
@@ -38,14 +38,14 @@ public class BookController {
         return ResponseEntity.ok(bookResponse);
     }
 
-    @GetMapping
-    public ResponseEntity<List<BookResponse>> getAllUsers() {
+    @GetMapping("/getAll")
+    public ResponseEntity<List<BookResponse>> getAllBooks() {
         List<BookResponse> books = bookService.getAllBooks();
         return ResponseEntity.ok(books);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BookResponse> updateUser(@PathVariable Long id, @RequestBody BookRequest bookRequest) {
+    public ResponseEntity<BookResponse> updateBook(@PathVariable Long id, @RequestBody BookRequest bookRequest) {
         BookResponse bookResponse = bookService.updateBook(id, bookRequest);
         return ResponseEntity.ok(bookResponse);
     }
@@ -57,8 +57,8 @@ public class BookController {
     }
 
     @PostMapping("/issue")
-    public ResponseEntity<Book> issueBook(@RequestBody IssueBookRequest bookRequest) {
-        return new ResponseEntity<>(issueBookService.issueBook(bookRequest.getBookId(), bookRequest.getUserId(), bookRequest.getConfirmationCode(),bookRequest.getExpiryDate()), HttpStatus.OK);
+    public ResponseEntity<Book> issueBook(@Valid @RequestBody IssueBookRequest bookRequest) {
+        return new ResponseEntity<>(issueBookService.issueBook(bookRequest.getBookId(), bookRequest.getUserId(), bookRequest.getAadharNo(),bookRequest.getExpiryDate()), HttpStatus.OK);
     }
 
     @PostMapping("/return/{issuedBookId}")
@@ -71,5 +71,13 @@ public class BookController {
     public ResponseEntity<Integer> getBookQuantity(@PathVariable Long bookId) {
         return new ResponseEntity<>(issueBookService.getBookQuantity(bookId), HttpStatus.OK);
     }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<BookResponse>> getAllBooks(
+            @RequestParam(value = "cityId", required = false) Long cityId,
+            @RequestParam(value = "libraryId", required = false) Long libraryId) {
+        List<BookResponse> books = bookService.getAllBooks(cityId, libraryId);
+        return ResponseEntity.ok(books);
+    }
     
-}
+}   

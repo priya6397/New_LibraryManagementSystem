@@ -21,6 +21,7 @@ public class Library {
     private String address;
     private String phoneNo;
     private String email;
+    private boolean isActive = true;
     @ManyToOne
     @JoinColumn(name = "city_id")
     private City city;

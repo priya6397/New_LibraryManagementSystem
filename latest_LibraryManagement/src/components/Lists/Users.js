@@ -13,6 +13,7 @@ import BookmarkAddedIcon from '@mui/icons-material/BookmarkAdded';
 import Pagination from '@mui/material/Pagination';
 import { ToastContainer, toast } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
+import { Col, Row } from 'react-bootstrap';
 
 
 export default function Users() {
@@ -120,22 +121,22 @@ export default function Users() {
         newErrors.address = validateAddress(address);
 
         setErrors(newErrors);
-    if (Object.values(newErrors).every(error => error === '')) {
-        console.log('Form submitted successfully:', currentData);
-        //const updatedData = { ...currentData}; //... spread operator stores data
-        UserServices.updateUser(currentData.id, currentData).then((response)=>{
-          if(response.status === 200){
-              toast.success("User updated successfully!");
-                console.log(response.data);
-                handleClose();
-                loadUsers();
-            }
-        }).catch((error)=>{
-            console.log("error", error)
-        })
-    } else {
-        console.log('Form has errors. Please correct them.');
-    }
+      if (Object.values(newErrors).every(error => error === '')) {
+          console.log('Form submitted successfully:', currentData);
+          //const updatedData = { ...currentData}; //... spread operator stores data
+          UserServices.updateUser(currentData.id, currentData).then((response)=>{
+            if(response.status === 200){
+                toast.success("User updated successfully!");
+                  console.log(response.data);
+                  handleClose();
+                  loadUsers();
+              }
+          }).catch((error)=>{
+              console.log("error", error)
+          })
+      } else {
+          console.log('Form has errors. Please correct them.');
+        }
     }
 
     const handleInputChange = (event) => {
@@ -216,16 +217,24 @@ export default function Users() {
     <div  style={{ width: '80%', margin: '20px auto' }}>
         <h2 style={{ fontWeight: 'bold' }}>Users List</h2>
         <br/>
-        <div >
-            <Link to="/AddUser">
-                <Button variant="primary">Add User</Button>
-            </Link>
-        </div>
-        <br/>
-        <input name='fullName' className='form-control'
+
+        <Row>
+          <Col>
+          <input name='fullName' className='form-control'
                                 value={fullName}
                                 onChange={onChangeSearch}
                                     type="text" placeholder='Search Here' />
+          </Col>
+        <Col>
+        <div style={{float:"right"}}>
+        <Link to="/AddUser">
+                <Button variant="primary">Add User</Button>
+            </Link>
+        </div>
+       </Col> 
+       </Row>
+        
+        
         <Table stripped bordered hover variant="light" style={{marginTop: "30px"}}>
         {users.length > 0 ? ( 
             <>

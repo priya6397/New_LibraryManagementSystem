@@ -70,4 +70,34 @@ public class GlobalExceptionHandler {
         );
     }
 
+//    @ExceptionHandler(RuntimeException.class)
+//    public ResponseEntity<String> handleMyException(RuntimeException ex) {
+//        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+//    }
+
+    @ExceptionHandler(BookIssuedException.class)
+    public ResponseEntity<String> handleBookIssuedException(BookIssuedException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(LibraryHasBooksException.class)
+    public ResponseEntity<String> handleLibraryHasBooksException(LibraryHasBooksException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(CityHasLibrariesException.class)
+    public ResponseEntity<String> handleCityHasLibrariesException(CityHasLibrariesException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<String> handleCustomException(CustomException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DuplicateEntryException.class)
+    public ResponseEntity<String> handleDuplicateEntryException(DuplicateEntryException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
 }

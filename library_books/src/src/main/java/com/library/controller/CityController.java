@@ -20,7 +20,7 @@ public class CityController {
     @Autowired
     private CityService cityService;
 
-    @PostMapping
+    @PostMapping("/save")
     public ResponseEntity<CityResponse> createCity(@Valid @RequestBody CityRequest cityRequest) {
         CityResponse cityResponse = cityService.createCity(cityRequest);
         return ResponseEntity.ok(cityResponse);
@@ -32,7 +32,7 @@ public class CityController {
         return ResponseEntity.ok(cityResponse);
     }
 
-    @GetMapping
+    @GetMapping("/getAll")
     public ResponseEntity<List<CityResponse>> getAllCities() {
         List<CityResponse> allCities = cityService.getAllCities();
         return ResponseEntity.ok(allCities);

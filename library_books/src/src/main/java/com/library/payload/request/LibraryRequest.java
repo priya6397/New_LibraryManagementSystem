@@ -1,5 +1,9 @@
 package com.library.payload.request;
 
+import com.library.Utils.Alphanumeric;
+import com.library.Utils.EmailWithTLD;
+import com.library.Utils.Numeric;
+import com.library.Utils.StringCharacter;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -8,27 +12,29 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 public class LibraryRequest {
     @NotEmpty(message = "Library Name is required")
-    @Size(max = 15, message = "Name must be at most 15 characters")
-//    @Pattern(regexp = "^[a-zA-Z ]{3,}$", message = "Name should not contain digits or special characters or empty spaces")
+    @StringCharacter
     private String name;
 
     @NotEmpty(message = "Address is required")
     @Size(max = 30, message = "Address must be at most 30 characters")
-//    @Pattern(regexp = "^[a-zA-Z0-9\\s]*$", message = "Address contains special characters")
+    @Alphanumeric
     private String address;
 
     @NotEmpty(message = "Phone No. is required")
-//    @Pattern(regexp =  "^\\d{10}$", message = "Check the phone number properly, it must contain 10 nos.")
+    @Size(max = 10, message = "Phone No. length should contain 10 digits")
+    @Numeric
     private String phoneNo;
 
     @NotEmpty(message = "Email is required")
-//    @Pattern(regexp = "^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,4}$", message = "Check your email properly")
+    @EmailWithTLD
     private String email;
 
     private Long cityId;

@@ -26,6 +26,7 @@ public class Book {
     private String bookType;
     private BigDecimal price;
     private int quantity;
+    private boolean isActive= true;
     @ManyToOne
     @JoinColumn(name = "library_id")
     private Library library;
